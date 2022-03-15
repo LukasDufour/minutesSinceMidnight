@@ -10,17 +10,15 @@ package timeofday;
 public class TimeOfDay {
 	
 	/**
-	 * @invar | 0 <= hours && hours <= 23
-	 * @invar | 0 <= minutes && minutes <= 59
+	 * @invar | 0 <= minutesSinceMidnight && minutesSinceMidnight < 24 * 60
 	 */
-	private int hours;
-	private int minutes;
+	private int minutesSinceMidnight;
 	
-	public int getHours() { return hours; }
+	public int getHours() { return minutesSinceMidnight / 60; }
 	
-	public int getMinutes() { return minutes; }
+	public int getMinutes() { return minutesSinceMidnight % 60; }
 	
-	public int getMinutesSinceMidnight() { return hours * 60 + minutes; }
+	public int getMinutesSinceMidnight() { return minutesSinceMidnight; }
 	
 	/**
 	 * Initializes this instance so that it stores the given time of day.
@@ -33,12 +31,11 @@ public class TimeOfDay {
 	 */
 	public TimeOfDay(int hours, int minutes) { 
 		if (hours < 0 || 23 < hours)
-			throw new IllegalArgumentException("`hours` is out of range");
+			throw new IllegalArgumentException();
 		if (minutes < 0 || 59 < minutes)
-			throw new IllegalArgumentException("`minutes` is out of range");
+			throw new IllegalArgumentException();
 		
-		this.hours = hours;
-		this.minutes = minutes;
+		this.minutesSinceMidnight = hours * 60 + minutes;
 	}
 	
 	
@@ -53,10 +50,7 @@ public class TimeOfDay {
 	 * @post | getMinutes() == old(getMinutes())
 	 */
 	public void setHours(int hours) { 
-		if (hours < 0 || 23 < hours)
-			throw new IllegalArgumentException("`hours` is out of range");
-		
-		this.hours = hours;
+		minutesSinceMidnight = 60 * hours + minutesSinceMidnight % 60;
 	}
 	
 	/**
@@ -70,10 +64,7 @@ public class TimeOfDay {
 	 * @post | getHours() == old(getHours())
 	 */
 	public void setMinutes(int minutes) { 
-		if (minutes < 0 || 59 < minutes)
-			throw new IllegalArgumentException("`minutes` is out of range");
-		
-		this.minutes = minutes;
+		minutesSinceMidnight = minutes + minutesSinceMidnight / 60 * 60;
 	}
 	
 	/**
@@ -86,10 +77,6 @@ public class TimeOfDay {
 	 * @post | getMinutesSinceMidnight() == minutesSinceMidnight
 	 */
 	public void setMinutesSinceMidnight(int minutesSinceMidnight) { 
-		if (minutesSinceMidnight < 0 || 1439 <= minutesSinceMidnight)
-			throw new IllegalArgumentException("`minutes` is out of range");
-		
-		this.hours = minutesSinceMidnight / 60;
-		this.minutes = minutesSinceMidnight % 60;
+		this.minutesSinceMidnight = minutesSinceMidnight;
 	}
 }
